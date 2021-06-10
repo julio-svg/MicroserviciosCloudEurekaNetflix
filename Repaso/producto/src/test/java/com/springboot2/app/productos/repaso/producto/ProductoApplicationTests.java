@@ -1,0 +1,13 @@
+package com.springboot2.app.productos.repaso.producto;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ProductoApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

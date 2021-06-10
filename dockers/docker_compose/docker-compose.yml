@@ -1,0 +1,69 @@
+version: '3.7'
+services: 
+    configserver:
+        image: config-server:v1
+        ports: 
+            - "8888:8888"
+        restart: always
+        networks: 
+            - springcloud
+
+    eurekaserver:
+        image: eureka-server:v1
+        ports: 
+            - "8761:8761"
+        restart: always
+        networks: 
+            - springcloud        
+
+    db-mysql:
+        image: mysql:8
+        ports: 
+            - "3307:3306"
+        restart: always
+        networks: 
+            - springcloud
+        environment: 
+            MYSQL_ROOT_PASSWORD: sasa
+            MYSQL_DATABASE: db_spring_cloud
+
+    servicio-productos:
+        image: servicio-productos:v1
+        restart: always
+        networks: 
+            - springcloud
+        depends_on: 
+            - configserver
+            - db-mysql
+            - eurekaserver
+
+    servicio-items:
+        image: servicio-items:v1
+        restart: always
+        ports: 
+            - "8002:8002"
+            - "8005:8005"
+            - "8007:8007"
+        networks: 
+            - springcloud
+        depends_on: 
+            - configserver
+            - servicio-productos
+            - eurekaserver            
+
+    servicio-zuul:
+        image: servicio-zuul:v1
+        restart: always
+        ports: 
+            - 8090:8090
+        networks: 
+            - springcloud
+        depends_on: 
+            - configserver
+            - servicio-productos
+            - eurekaserver            
+            - servicio-items
+        
+networks: 
+    springcloud:
+
